@@ -40,12 +40,18 @@
     .tech img{width:22px;height:22px;filter:grayscale(0);}
     .projects{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
     .project{background:linear-gradient(180deg, rgba(255,255,255,0.015), rgba(255,255,255,0.01));padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,0.02)}
+    .project small{color:var(--muted);font-size:12px}
+    .repo-meta{margin-top:8px;color:var(--muted);font-size:13px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+
+    /* make anchors styled like the project card */
+    a.project{display:block;color:inherit;text-decoration:none}
+    a.project:hover{transform:translateY(-4px);transition:transform .14s ease}
 
     /* right column */
     .side{background:linear-gradient(180deg, rgba(12,18,28,0.6), rgba(3,9,18,0.4));padding:24px}
     .profile{display:flex;align-items:center;gap:14px}
     .avatar{width:72px;height:72px;border-radius:12px;background:linear-gradient(135deg,#6ee7b7,#60a5fa);display:flex;align-items:center;justify-content:center;font-weight:700;color:#042a1b;font-size:22px}
-    .meta small{color:var(--muted)}
+    .meta small{Color:var(--muted)}
 
     .contact{margin-top:18px;display:flex;flex-direction:column;gap:8px}
     .btn{display:inline-flex;align-items:center;gap:8px;padding:10px 12px;border-radius:10px;background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--accent);text-decoration:none}
@@ -56,6 +62,7 @@
     @media (max-width:920px){
       .card{grid-template-columns:1fr}
       .side{order:2}
+      .projects{grid-template-columns:1fr}
     }
   </style>
 </head>
@@ -90,24 +97,13 @@
 
         <div class="section">
           <h3 style="margin:0 0 10px 0">Selected Projects</h3>
-          <div class="projects">
-            <div class="project">
-              <strong>Adaptive Quiz (IRT)</strong>
-              <div style="color:var(--muted);font-size:13px;margin-top:6px">An adaptive assessment engine using Item Response Theory for dynamic difficulty.</div>
-            </div>
-            <div class="project">
-              <strong>Screen Translate (Desktop)</strong>
-              <div style="color:var(--muted);font-size:13px;margin-top:6px">A desktop utility to capture and translate on-screen text in real-time.</div>
-            </div>
-            <div class="project">
-              <div style="font-weight:600">Flutter Mobile App</div>
-              <div style="color:var(--muted);font-size:13px;margin-top:6px">Cross-platform app with clean UI and offline-first design.</div>
-            </div>
-            <div class="project">
-              <div style="font-weight:600">Algorithm Repo</div>
-              <div style="color:var(--muted);font-size:13px;margin-top:6px">Collection of data structures & algorithm solutions in C++ and Python.</div>
-            </div>
+
+          <!-- REPO LIST WILL BE RENDERED INTO THIS CONTAINER -->
+          <div id="selected-repos" class="projects">
+            <!-- initial placeholder -->
+            <div id="repos-loading" class="project">Loading repositories…</div>
           </div>
+
         </div>
 
       </div>
@@ -138,7 +134,7 @@
     // set copyright year
     document.getElementById('year').textContent = new Date().getFullYear();
 
-    // Simple particle background using canvas
+    // Simple particle background using canvas (unchanged)
     const canvas = document.getElementById('bgcanvas');
     const ctx = canvas.getContext('2d');
     let w = canvas.width = innerWidth;
@@ -232,6 +228,80 @@
         if(t) t.scrollIntoView({behavior:'smooth'});
       });
     });
+
+    // -----------------------------
+    // GitHub repos fetch & render
+    // -----------------------------
+    (function loadGitHubRepos(){
+      const user = 'tunakem9889'; // <-- your GitHub username
+      const perPage = 100; // max per page without auth
+      const endpoint = `https://api.github.com/users/${user}/repos?per_page=${perPage}&sort=updated`;
+
+      const container = document.getElementById('selected-repos');
+      const loading = document.getElementById('repos-loading');
+
+      fetch(endpoint)
+        .then(async res => {
+          if(!res.ok) throw new Error(`GitHub API error: ${res.status}`);
+          const repos = await res.json();
+          // remove loading placeholder
+          if(loading) loading.remove();
+
+          if(!Array.isArray(repos) || repos.length === 0){
+            container.innerHTML = '<div class="project">No public repositories found.</div>';
+            return;
+          }
+
+          // render top N or all (here render all)
+          repos.forEach(repo => {
+            const a = document.createElement('a');
+            a.className = 'project';
+            a.href = repo.html_url;
+            a.target = '_blank';
+            a.rel = 'noopener';
+            a.title = repo.name;
+
+            const name = document.createElement('div');
+            name.innerHTML = `<strong>${repo.name}</strong>`;
+            a.appendChild(name);
+
+            if(repo.description){
+              const desc = document.createElement('div');
+              desc.style.color = 'var(--muted)';
+              desc.style.fontSize = '13px';
+              desc.style.marginTop = '6px';
+              desc.textContent = repo.description;
+              a.appendChild(desc);
+            }
+
+            const meta = document.createElement('div');
+            meta.className = 'repo-meta';
+
+            if(repo.language){
+              const lang = document.createElement('span');
+              lang.innerHTML = `🧩 ${repo.language}`;
+              meta.appendChild(lang);
+            }
+
+            const stars = document.createElement('span');
+            stars.innerHTML = `⭐ ${repo.stargazers_count}`;
+            meta.appendChild(stars);
+
+            const updated = document.createElement('small');
+            const d = new Date(repo.updated_at);
+            updated.textContent = `Updated ${d.toLocaleDateString()}`;
+            meta.appendChild(updated);
+
+            a.appendChild(meta);
+            container.appendChild(a);
+          });
+        })
+        .catch(err => {
+          console.error(err);
+          if(loading) loading.textContent = 'Could not load repositories.';
+          else container.insertAdjacentHTML('afterbegin','<div class="project">Could not load repositories.</div>');
+        });
+    })();
   </script>
 </body>
 </html>
