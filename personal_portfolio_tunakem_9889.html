@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Tuan Nguyen — Portfolio</title>
+  <meta name="description" content="Personal portfolio of Tuan Nguyen — student developer. Built with HTML, CSS, and minimal JS.">
+  <style>
+    :root{
+      --bg:#0f1724;
+      --card:#0b1220;
+      --muted:#9aa4b2;
+      --accent:#6ee7b7;
+      --glass: rgba(255,255,255,0.03);
+      --glass-2: rgba(255,255,255,0.04);
+      --radius:16px;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;background:var(--bg);color:#e6eef6}
+
+    /* animated canvas fills the screen */
+    #bgcanvas{position:fixed;inset:0;z-index:0;display:block}
+
+    .container{position:relative;z-index:2;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:48px}
+    .card{width:100%;max-width:1100px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));backdrop-filter:blur(6px);border-radius:var(--radius);box-shadow:0 8px 30px rgba(2,6,23,0.6);overflow:hidden;display:grid;grid-template-columns:1fr 360px}
+
+    /* left column */
+    .main{padding:48px}
+    h1{margin:0;font-size:28px;letter-spacing:-0.4px}
+    h2{margin:6px 0 18px;color:var(--muted);font-weight:600}
+    p.lead{color:var(--muted);line-height:1.6}
+
+    .badges{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+    .badge{background:var(--glass);padding:8px 12px;border-radius:999px;font-size:13px;color:var(--accent);border:1px solid rgba(110,231,183,0.08)}
+
+    .section{margin-top:26px}
+    .tech-grid{display:flex;flex-wrap:wrap;gap:12px}
+    .tech{display:flex;align-items:center;gap:10px;background:var(--glass-2);padding:10px 12px;border-radius:12px;border:1px solid rgba(255,255,255,0.02)}
+    .tech img{width:22px;height:22px;filter:grayscale(0);}
+    .projects{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
+    .project{background:linear-gradient(180deg, rgba(255,255,255,0.015), rgba(255,255,255,0.01));padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,0.02)}
+
+    /* right column */
+    .side{background:linear-gradient(180deg, rgba(12,18,28,0.6), rgba(3,9,18,0.4));padding:24px}
+    .profile{display:flex;align-items:center;gap:14px}
+    .avatar{width:72px;height:72px;border-radius:12px;background:linear-gradient(135deg,#6ee7b7,#60a5fa);display:flex;align-items:center;justify-content:center;font-weight:700;color:#042a1b;font-size:22px}
+    .meta small{color:var(--muted)}
+
+    .contact{margin-top:18px;display:flex;flex-direction:column;gap:8px}
+    .btn{display:inline-flex;align-items:center;gap:8px;padding:10px 12px;border-radius:10px;background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--accent);text-decoration:none}
+
+    footer{padding:18px;text-align:center;color:var(--muted);font-size:13px}
+
+    /* responsive */
+    @media (max-width:920px){
+      .card{grid-template-columns:1fr}
+      .side{order:2}
+    }
+  </style>
+</head>
+<body>
+  <canvas id="bgcanvas"></canvas>
+  <div class="container">
+    <div class="card" role="region" aria-label="Portfolio card">
+      <div class="main">
+        <h1>Tuan Nguyen <span style="color:var(--muted);font-size:14px;font-weight:600">— Student Developer</span></h1>
+        <h2>Computer Science Student • Building clean, practical software</h2>
+        <p class="lead">I am currently a student focused on data structures & algorithms, object-oriented design, and cross-platform applications. I enjoy crafting maintainable code and learning backend systems, APIs, and mobile development.</p>
+
+        <div class="badges">
+          <div class="badge">C • C++ • C#</div>
+          <div class="badge">Python • Dart • Flutter</div>
+          <div class="badge">HTML • CSS • Git</div>
+        </div>
+
+        <div class="section">
+          <h3 style="margin:0 0 10px 0">Tech Stack</h3>
+          <div class="tech-grid">
+            <div class="tech"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/c/c-original.svg" alt="C"/><span>C</span></div>
+            <div class="tech"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/cplusplus/cplusplus-original.svg" alt="C++"/><span>C++</span></div>
+            <div class="tech"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/csharp/csharp-original.svg" alt="C#"/><span>C#</span></div>
+            <div class="tech"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" alt="Python"/><span>Python</span></div>
+            <div class="tech"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/dart/dart-original.svg" alt="Dart"/><span>Dart</span></div>
+            <div class="tech"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/flutter/flutter-original.svg" alt="Flutter"/><span>Flutter</span></div>
+            <div class="tech"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg" alt="HTML"/><span>HTML</span></div>
+            <div class="tech"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg" alt="CSS"/><span>CSS</span></div>
+          </div>
+        </div>
+
+        <div class="section">
+          <h3 style="margin:0 0 10px 0">Selected Projects</h3>
+          <div class="projects">
+            <div class="project">
+              <strong>Adaptive Quiz (IRT)</strong>
+              <div style="color:var(--muted);font-size:13px;margin-top:6px">An adaptive assessment engine using Item Response Theory for dynamic difficulty.</div>
+            </div>
+            <div class="project">
+              <strong>Screen Translate (Desktop)</strong>
+              <div style="color:var(--muted);font-size:13px;margin-top:6px">A desktop utility to capture and translate on-screen text in real-time.</div>
+            </div>
+            <div class="project">
+              <div style="font-weight:600">Flutter Mobile App</div>
+              <div style="color:var(--muted);font-size:13px;margin-top:6px">Cross-platform app with clean UI and offline-first design.</div>
+            </div>
+            <div class="project">
+              <div style="font-weight:600">Algorithm Repo</div>
+              <div style="color:var(--muted);font-size:13px;margin-top:6px">Collection of data structures & algorithm solutions in C++ and Python.</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <aside class="side">
+        <div class="profile">
+          <div class="avatar">TN</div>
+          <div class="meta">
+            <div style="font-weight:700">Tuan Nguyen</div>
+            <small>Computer Science Student</small>
+          </div>
+        </div>
+
+        <div class="contact">
+          <a class="btn" href="mailto:anhtuna417@gmail.com">✉️ Email</a>
+          <a class="btn" href="https://github.com/tunakem9889" target="_blank" rel="noopener">🐙 GitHub</a>
+          <a class="btn" href="#projects">📁 Projects</a>
+        </div>
+
+        <div style="margin-top:18px;color:var(--muted);font-size:13px">Availability: Open to internships & collaboration.</div>
+      </aside>
+    </div>
+  </div>
+
+  <footer>© <span id="year"></span> Tuan Nguyen — Built with HTML, CSS & JS</footer>
+
+  <script>
+    // set copyright year
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Simple particle background using canvas
+    const canvas = document.getElementById('bgcanvas');
+    const ctx = canvas.getContext('2d');
+    let w = canvas.width = innerWidth;
+    let h = canvas.height = innerHeight;
+    const particles = [];
+
+    function rand(min,max){return Math.random()*(max-min)+min}
+    class Particle{
+      constructor(){
+        this.reset();
+      }
+      reset(){
+        this.x = rand(0,w);
+        this.y = rand(0,h);
+        this.vx = rand(-0.25,0.25);
+        this.vy = rand(-0.25,0.25);
+        this.size = rand(0.6,2.2);
+        this.alpha = rand(0.05,0.25);
+      }
+      move(){
+        this.x += this.vx;
+        this.y += this.vy;
+        if(this.x<0||this.x>w||this.y<0||this.y>h) this.reset();
+      }
+      draw(){
+        ctx.beginPath();
+        ctx.fillStyle = 'rgba(110,231,183,'+this.alpha+')';
+        ctx.arc(this.x,this.y,this.size,0,Math.PI*2);
+        ctx.fill();
+      }
+    }
+
+    function createParticles(count){
+      for(let i=0;i<count;i++) particles.push(new Particle());
+    }
+    function resize(){
+      w = canvas.width = innerWidth;
+      h = canvas.height = innerHeight;
+      // adjust particle count by area
+      particles.length = 0;
+      createParticles(Math.floor((w*h)/60000));
+    }
+    addEventListener('resize', resize);
+
+    function frame(){
+      ctx.clearRect(0,0,w,h);
+
+      // background gradient
+      const g = ctx.createLinearGradient(0,0,w,h);
+      g.addColorStop(0,'#071129');
+      g.addColorStop(0.5,'#071827');
+      g.addColorStop(1,'#08121a');
+      ctx.fillStyle = g;
+      ctx.fillRect(0,0,w,h);
+
+      // glowing radial
+      const rg = ctx.createRadialGradient(w*0.85,h*0.15,0,w*0.85,h*0.15,400);
+      rg.addColorStop(0,'rgba(96,165,250,0.12)');
+      rg.addColorStop(1,'rgba(96,165,250,0)');
+      ctx.fillStyle = rg;
+      ctx.fillRect(0,0,w,h);
+
+      // draw particles
+      for(let p of particles){p.move();p.draw();}
+
+      // connect close particles
+      for(let i=0;i<particles.length;i++){
+        for(let j=i+1;j<particles.length;j++){
+          const a=particles[i], b=particles[j];
+          const dx=a.x-b.x, dy=a.y-b.y; const dist=dx*dx+dy*dy;
+          if(dist<9000){
+            const alpha = Math.min(0.08, (9000-dist)/9000*0.08);
+            ctx.strokeStyle = 'rgba(110,231,183,'+alpha+')';
+            ctx.lineWidth = 0.6;
+            ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y); ctx.stroke();
+          }
+        }
+      }
+
+      requestAnimationFrame(frame);
+    }
+
+    // init
+    resize();
+    frame();
+
+    // smooth scroll for anchor
+    document.querySelectorAll('a[href^="#"]').forEach(a=>{
+      a.addEventListener('click', e=>{
+        e.preventDefault(); const t=document.querySelector(a.getAttribute('href'));
+        if(t) t.scrollIntoView({behavior:'smooth'});
+      });
+    });
+  </script>
+</body>
+</html>
