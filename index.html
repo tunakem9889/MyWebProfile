@@ -6,9 +6,7 @@
   <title>Tuan Nguyen — Portfolio (Neon)</title>
   <meta name="description" content="Portfolio — Tuan Nguyen. Dark neon theme." />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
-  <!-- GSAP (optional for polished entrance) -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js" defer></script>
-
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -50,7 +48,6 @@
         <div class="meta">
           <h3>Tuan Nguyen</h3>
           <small>Student • Developer</small>
-
           <div class="mini-links">
             <a class="icon-link" href="https://github.com/tunakem9889" target="_blank" rel="noopener">GitHub</a>
             <a class="icon-link" href="mailto:anhtuna417@gmail.com">Email</a>
@@ -63,13 +60,19 @@
   <section id="projects" class="wrap section">
     <div class="section-head">
       <h2>Selected Projects</h2>
-      <div class="controls">
+      <div class="controls" aria-hidden="false">
         <input id="repo-filter" placeholder="Filter projects..." aria-label="Filter projects"/>
-        <select id="repo-sort" title="Sort repos">
-          <option value="updated">Recently updated</option>
-          <option value="stars">Most stars</option>
-          <option value="name">Name</option>
-        </select>
+        <!-- CUSTOM SELECT (replaces native select) -->
+        <div id="repo-sort" class="custom-select" data-value="updated" tabindex="0" aria-label="Sort repos">
+          <button type="button" class="cs-toggle" aria-haspopup="listbox" aria-expanded="false">
+            Recently updated <span class="cs-arrow">▾</span>
+          </button>
+          <ul class="cs-options" role="listbox" tabindex="-1">
+            <li role="option" data-value="updated" aria-selected="true">Recently updated</li>
+            <li role="option" data-value="stars" aria-selected="false">Most stars</li>
+            <li role="option" data-value="name" aria-selected="false">Name</li>
+          </ul>
+        </div>
       </div>
     </div>
 
