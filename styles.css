@@ -392,3 +392,40 @@ main, header, footer, section, .card { position:relative; z-index:2 }
   .custom-select{ min-width:140px; }
   .custom-select .cs-options{ right:auto; left:0; min-width:160px; }
 }
+
+/*-----------------------------------------------------------------------------------------------------------------------------*/
+
+/* ---------------------------
+   GitHub Stats & Activity (neon)
+   Add to styles.css
+   --------------------------- */
+.gh-stats .section-head{ margin-bottom:10px }
+.gh-grid{
+  display:grid;
+  grid-template-columns: 1fr 420px;
+  gap:14px;
+  align-items:start;
+}
+.gh-grid .card{ padding:16px; min-height:120px; }
+
+/* overview */
+.gh-overview .gh-kv{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:10px; color:var(--muted) }
+.gh-overview .gh-kv li strong{ color:#fff; margin-right:8px; font-weight:700 }
+
+/* langs */
+.gh-langs-bar{ height:12px; border-radius:8px; background:linear-gradient(90deg,#0b0b0b,#0b0b0b); overflow:hidden; margin-bottom:8px; border:1px solid rgba(255,255,255,0.04) }
+.gh-langs-bar > span{ display:inline-block; height:100%; }
+.gh-langs-list{ list-style:none; margin:0; padding:0; display:flex; flex-wrap:wrap; gap:8px }
+.gh-langs-list li{ display:flex; gap:8px; align-items:center; color:var(--muted); font-size:13px }
+.gh-langs-list .color-dot{ width:10px; height:10px; border-radius:50%; display:inline-block }
+
+/* streaks */
+.streak-grid{ display:flex; gap:12px; margin-top:6px; align-items:stretch }
+.streak-card{ background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.006)); padding:12px; border-radius:8px; flex:1; text-align:center; border:1px solid rgba(255,255,255,0.02) }
+.streak-num{ font-size:24px; font-weight:800; color:var(--neon-pink) }
+.streak-label{ font-size:13px; color:var(--muted); margin-top:6px }
+
+/* small screens */
+@media (max-width:980px){
+  .gh-grid{ grid-template-columns: 1fr; }
+}

@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="vi">
+
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
@@ -9,6 +10,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js" defer></script>
   <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
   <canvas id="bgcanvas" aria-hidden="true"></canvas>
 
@@ -27,7 +29,8 @@
     <div class="wrap hero-grid">
       <div class="intro card glass">
         <h1>Hi, I'm <span>Tuan Nguyen</span></h1>
-        <p class="lead">Computer Science student — building clean & maintainable software. Intern-ready. Interested in backend, cross-platform apps, and developer tooling.</p>
+        <p class="lead">Computer Science student — building clean & maintainable software. Intern-ready. Interested in
+          backend, cross-platform apps, and developer tooling.</p>
 
         <div class="cta-row">
           <a class="btn primary" href="mailto:anhtuna417@gmail.com">Contact</a>
@@ -57,11 +60,63 @@
     </div>
   </main>
 
+  <section id="gh-stats" class="wrap section gh-stats">
+    <div class="section-head">
+      <h2>GitHub Stats & Activity</h2>
+    </div>
+
+    <div class="gh-grid">
+      <div class="gh-overview card">
+        <h3 class="gh-title">GitHub Overview</h3>
+        <div class="gh-overview-body">
+          <ul class="gh-kv">
+            <li><strong>Total Stars Earned:</strong> <span id="gh-total-stars">—</span></li>
+            <li><strong>Total Commits:</strong> <span id="gh-total-commits">—</span></li>
+            <li><strong>Total PRs (authored):</strong> <span id="gh-total-prs">—</span></li>
+            <li><strong>Total Issues (authored):</strong> <span id="gh-total-issues">—</span></li>
+            <li><strong>Contributed to (last year):</strong> <span id="gh-contrib-last-year">—</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="gh-langs card">
+        <h3 class="gh-title">Top Languages</h3>
+        <div id="gh-langs-bar" class="gh-langs-bar"></div>
+        <ul id="gh-langs-list" class="gh-langs-list"></ul>
+      </div>
+
+      <div class="gh-streaks card">
+        <h3 class="gh-title">Streak Stats</h3>
+        <div id="gh-streaks-body">
+          <!-- fallback / simple cards -->
+          <div class="streak-grid">
+            <div class="streak-card">
+              <div class="streak-num" id="gh-total-contrib">—</div>
+              <div class="streak-label">Total Contributions</div>
+            </div>
+            <div class="streak-card">
+              <div class="streak-num" id="gh-current-streak">—</div>
+              <div class="streak-label">Current Streak</div>
+            </div>
+            <div class="streak-card">
+              <div class="streak-num" id="gh-longest-streak">—</div>
+              <div class="streak-label">Longest Streak</div>
+            </div>
+          </div>
+          <div class="gh-note" id="gh-streak-note">
+            For accurate streak stats provide a GitHub token (see console or docs).
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
   <section id="projects" class="wrap section">
     <div class="section-head">
       <h2>Selected Projects</h2>
       <div class="controls" aria-hidden="false">
-        <input id="repo-filter" placeholder="Filter projects..." aria-label="Filter projects"/>
+        <input id="repo-filter" placeholder="Filter projects..." aria-label="Filter projects" />
         <!-- CUSTOM SELECT (replaces native select) -->
         <div id="repo-sort" class="custom-select" data-value="updated" tabindex="0" aria-label="Sort repos">
           <button type="button" class="cs-toggle" aria-haspopup="listbox" aria-expanded="false">
@@ -100,4 +155,5 @@
 
   <script src="app.js" defer></script>
 </body>
+
 </html>

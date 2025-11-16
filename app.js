@@ -307,3 +307,166 @@ loadRepos();
   }
   frame();
 })();
+
+
+// End of app.js
+// github-stats.js
+// Requires: USER constant (your GitHub username) defined earlier or set here:
+const GH_USER = 'tunakem9889'; // <-- đổi nếu cần
+// Optionally set a GitHub token to increase rate limit and enable some search endpoints
+// Create a Personal Access Token (no scopes required for public data) and paste below.
+// If you don't want to put token in client side, skip it (but you may hit rate limits).
+const GH_TOKEN = null; // 'ghp_XXXX' or null
+
+// helper fetch with optional token
+async function ghFetch(url){
+  const headers = { 'Accept': 'application/vnd.github.v3+json' };
+  if(GH_TOKEN) headers['Authorization'] = `token ${GH_TOKEN}`;
+  const r = await fetch(url, { headers });
+  if(!r.ok) {
+    const txt = await r.text().catch(()=>r.statusText);
+    throw new Error(`GitHub API error ${r.status}: ${txt}`);
+  }
+  return r;
+}
+
+// main function
+async function loadGitHubStats(){
+  const containerPrefix = 'gh-';
+  const el = id => document.getElementById(id);
+
+  try {
+    // 1) fetch repos
+    const reposRes = await ghFetch(`https://api.github.com/users/${GH_USER}/repos?per_page=100&sort=updated`);
+    const repos = await reposRes.json();
+
+    // total stars (sum)
+    const totalStars = repos.reduce((s,r)=> s + (r.stargazers_count||0), 0);
+    el(containerPrefix + 'total-stars').textContent = totalStars;
+
+    // 2) languages: fetch /languages per repo and aggregate bytes
+    const langTotals = {};
+    await Promise.all(repos.map(async repo => {
+      try {
+        const r = await ghFetch(repo.languages_url);
+        const langs = await r.json();
+        Object.entries(langs).forEach(([l,bytes])=>{
+          langTotals[l] = (langTotals[l]||0) + bytes;
+        });
+      } catch(e) {
+        console.warn('languages fetch failed for', repo.name, e);
+      }
+    }));
+    // build list sorted
+    const totalBytes = Object.values(langTotals).reduce((a,b)=>a+b, 0) || 1;
+    const langEntries = Object.entries(langTotals).sort((a,b)=> b[1]-a[1]).slice(0,8);
+    // render bar & list
+    const bar = el(containerPrefix + 'langs-bar');
+    const list = el(containerPrefix + 'langs-list');
+    if(bar && list){
+      bar.innerHTML = '';
+      list.innerHTML = '';
+      const colors = ['#3b82f6','#f59e0b','#06b6d4','#8b5cf6','#ef4444','#06d6a0','#ff6bcb','#ffd166'];
+      let left = 0;
+      langEntries.forEach(([name,bytes],i)=>{
+        const pct = Math.round((bytes/totalBytes)*100*100)/100;
+        const span = document.createElement('span');
+        span.style.width = pct + '%';
+        span.style.background = colors[i % colors.length];
+        span.title = `${name} ${pct}%`;
+        bar.appendChild(span);
+
+        const li = document.createElement('li');
+        li.innerHTML = `<span class="color-dot" style="background:${colors[i % colors.length]}"></span> ${name} ${pct}%`;
+        list.appendChild(li);
+      });
+    }
+
+    // 3) total commits by this user: sum contributions from /contributors for each repo (find entry for GH_USER)
+    let totalCommits = 0;
+    await Promise.all(repos.map(async repo => {
+      try {
+        const r = await ghFetch(`https://api.github.com/repos/${GH_USER}/${repo.name}/contributors?per_page=100&anon=true`);
+        // contributors endpoint includes contributions counts per contributor
+        const contributors = await r.json();
+        if(Array.isArray(contributors)){
+          const me = contributors.find(c => c.login && c.login.toLowerCase() === GH_USER.toLowerCase());
+          if(me) totalCommits += (me.contributions || 0);
+        }
+      } catch(e) {
+        // ignore private/forbidden repos
+      }
+    }));
+    el(containerPrefix + 'total-commits').textContent = totalCommits;
+
+    // 4) total PRs & total Issues authored by user (uses search API — rate limited if unauthenticated)
+    // We'll try search open+closed PRs/issues authored by user across GitHub:
+    async function countSearch(q){
+      try{
+        const r = await ghFetch('https://api.github.com/search/issues?q=' + encodeURIComponent(q));
+        const j = await r.json();
+        return j.total_count || 0;
+      }catch(e){
+        console.warn('search failed', e);
+        return 'N/A';
+      }
+    }
+
+    const prsCount = await countSearch(`author:${GH_USER} type:pr`);
+    const issuesCount = await countSearch(`author:${GH_USER} type:issue`);
+    el(containerPrefix + 'total-prs').textContent = prsCount;
+    el(containerPrefix + 'total-issues').textContent = issuesCount;
+
+    // 5) contributed to (last year) & streaks: these require GraphQL contributionsCalendar or events scanning.
+    // We'll compute a simple "contributed to (last year)" = number of distinct repos with at least one contribution in the last 365 days.
+    const since = new Date(); since.setDate(since.getDate() - 365);
+    const sinceIso = since.toISOString();
+    let contributedRepos = new Set();
+    // For each repo, fetch commits by author since date (may be heavy). We'll request commits endpoint for repo with author param
+    await Promise.all(repos.map(async repo => {
+      try{
+        // This counts commits authored by GH_USER since `sinceIso` (may be paginated but we only need >0)
+        const url = `https://api.github.com/repos/${repo.owner.login}/${repo.name}/commits?author=${GH_USER}&since=${sinceIso}&per_page=1`;
+        const r = await ghFetch(url);
+        if(r.status === 200){
+          const arr = await r.json();
+          if(Array.isArray(arr) && arr.length > 0) contributedRepos.add(repo.name);
+        }
+      }catch(e){
+        // ignore
+      }
+    }));
+
+    el(containerPrefix + 'contrib-last-year').textContent = contributedRepos.size;
+
+    // 6) Streaks & total contributions (current & longest) require contribution calendar (GraphQL) for accuracy.
+    // We'll put totals based on commits counted above (approx).
+    el(containerPrefix + 'total-contrib').textContent = totalCommits;
+    // If no GH_TOKEN provided we can't fetch contributionsCalendar — show N/A for streaks
+    if(!GH_TOKEN){
+      el(containerPrefix + 'current-streak').textContent = 'N/A';
+      el(containerPrefix + 'longest-streak').textContent = 'N/A';
+      el('gh-streak-note')?.classList?.add('visible');
+    } else {
+      // If token present, call GraphQL contributionsCalendar for streaks (implementation omitted here)
+      // (You can request me to implement GraphQL call to compute streaks if you provide token)
+      el(containerPrefix + 'current-streak').textContent = '—';
+      el(containerPrefix + 'longest-streak').textContent = '—';
+    }
+
+  } catch(err){
+    console.error('Failed to load GitHub stats', err);
+    // show fallback
+    ['total-stars','total-commits','total-prs','total-issues','contrib-last-year','total-contrib','current-streak','longest-streak'].forEach(id=>{
+      const e = document.getElementById('gh-' + id);
+      if(e) e.textContent = '—';
+    });
+  }
+}
+
+// attach to DOM ready
+document.addEventListener('DOMContentLoaded', ()=> {
+  // small helper to ensure target elements exist
+  if(document.getElementById('gh-total-stars')) loadGitHubStats();
+});
+// End of github-stats.js
