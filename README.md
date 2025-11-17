@@ -45,11 +45,6 @@ This is the official **personal portfolio website** of **Tuan Nguyen (tunakem988
 * GitHub profile link
 * Project navigation
 
-#### **5. Footer**
-
-* Automatically updates year using JavaScript
-
----
 
 ## 🛠️ Technologies Used
 
@@ -78,18 +73,6 @@ index.html   # Main website file
 2. Open it directly in your browser (Chrome, Edge, Opera, Firefox)
 3. Enjoy the live particle animation and UI
 
-### 👉 **Host on GitHub Pages**
-
-1. Create a new repo named anything (e.g., `portfolio`)
-2. Upload `index.html`
-3. Go to **Settings → Pages**
-4. Select:
-
-   * Source: `main`
-   * Folder: `/root`
-5. Save → Your website is live!
-
----
 
 ## 📬 Contact
 
@@ -98,23 +81,3 @@ index.html   # Main website file
 
 ---
 
-## 🔗 Live Demo (Optional)
-
-If you want, I can set up a **GitHub Pages link** for you and place it here.
-
----
-
-## 📄 License
-
-This project uses no restrictive license. You are free to modify, customize, and expand your personal portfolio.
-
----
-
-If you'd like, I can also:
-
-* Add a dark/light theme switcher 🌗
-* Add interactive sections (timeline, skills bar, testimonials, blog)
-* Export this website as a ZIP package
-* Create an extended multi-page portfolio
-
-Just tell me! 😄
